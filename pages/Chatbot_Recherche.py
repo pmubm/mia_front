@@ -3,6 +3,7 @@ import requests
 from utiles import get_simple_response
 from utiles import get_agent_response_API
 from utiles import get_agent_response_NGROK
+from utiles import get_agent_response_NGROK_et_time
 
 st.title('Chatbot Recherche Salle de cours')
 
@@ -16,7 +17,7 @@ for message in st.session_state.messages:
         st.markdown(message["content"])
 
 # side bar select
-selection = st.sidebar.selectbox("Choisir un agent:", ["Choisir un agent","Salle de classe test","Salle de classe NGROK"])
+selection = st.sidebar.selectbox("Choisir un agent:", ["Choisir un agent","Salle de classe test","Salle de classe NGROK","Salle de classe NGROK et time"])
 if selection == "Choisir un agent":
     st.title("Echo Bot")
 
@@ -72,3 +73,21 @@ elif selection == "Salle de classe NGROK":
             st.markdown(response)  # Affiche la réponse directement
 
         st.session_state.messages.append({"role": "assistant", "content": response})
+
+elif selection == "Salle de classe NGROK et time":
+    st.title("Echo Bot : Salle de classe NGROK et time")
+    if prompt := st.chat_input("Ecrivez à l'Agent Salle de classe NGROK"):
+        st.chat_message("user").markdown(prompt)
+        st.session_state.messages.append({"role": "user", "content": prompt})
+
+        response, elapsed_time = get_agent_response_NGROK(prompt) # Récupère la réponse ET le temps
+        print(f"Réponse brute de l'API : {response}")
+        print(f"Temps de requête : {elapsed_time:.2f} secondes") # Affiche le temps dans la console
+
+        with st.chat_message("assistant"):
+            st.markdown(response)
+            st.markdown(f"Temps de réponse : {elapsed_time:.2f} secondes") # Affiche le temps dans le chat
+
+        st.session_state.messages.append({"role": "assistant", "content": response})
+
+

@@ -1,5 +1,5 @@
 import requests
-
+import time
 
 def get_simple_response(prompt: str = 'Qui es-tu ?', last_interactions=[]):
     """
@@ -76,6 +76,29 @@ def get_agent_response_NGROK(prompt: str = 'Qui es-tu ?', last_interactions=[]):
         print(f"Erreur de requête: {e}")
         return f"Erreur lors de la communication avec l'API: {e}", last_interactions
         #try:
+
+
+
+def get_agent_response_NGROK_et_time(prompt: str = 'Qui es-tu ?', last_interactions=[]):
+    """
+    Envoie une requête GET à l'API FastAPI via Ngrok et traite la réponse.
+    Mesure le temps de la requête et le renvoie avec la réponse.
+    Gère les cas où la réponse n'est pas un JSON valide.
+    """
+    url = "https://ae59-147-210-91-7.ngrok-free.app/requete"  # Assurez-vous que l'URL est correcte
+    params = {"prompt": prompt}
+
+    try:
+        start_time = time.time()  # Enregistre le temps de début
+        response = requests.get(url, params=params)
+        end_time = time.time()  # Enregistre le temps de fin
+        elapsed_time = end_time - start_time  # Calcule le temps écoulé en secondes
+
+        return response.text, elapsed_time  # Retourne la réponse et le temps écoulé
+
+    except requests.exceptions.RequestException as e:
+        print(f"Erreur de requête: {e}")
+        return f"Erreur lors de la communication avec l'API: {e}", 0  # Retourne un temps de 0 en cas d'erreur
 
     '''
             response_json = response.json()
